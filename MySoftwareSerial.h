@@ -29,8 +29,8 @@ The latest version of this library can always be found at
 http://arduiniana.org.
 */
 
-#ifndef SoftwareSerial_h
-#define SoftwareSerial_h
+#ifndef MySoftwareSerial_h
+#define MySoftwareSerial_h
 
 #include <inttypes.h>
 #include <Stream.h>
@@ -44,7 +44,7 @@ http://arduiniana.org.
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #endif
 
-class SoftwareSerial : public Stream
+class MySoftwareSerial : public Stream
 {
 private:
   // per object data
@@ -66,7 +66,7 @@ private:
   static char _receive_buffer[_SS_MAX_RX_BUFF]; 
   static volatile uint8_t _receive_buffer_tail;
   static volatile uint8_t _receive_buffer_head;
-  static SoftwareSerial *active_object;
+  static MySoftwareSerial *active_object;
 
   // private methods
   void recv();
@@ -80,8 +80,8 @@ private:
 
 public:
   // public methods
-  SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false);
-  ~SoftwareSerial();
+  MySoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false);
+  ~MySoftwareSerial();
   void begin(long speed);
   bool listen();
   void end();
