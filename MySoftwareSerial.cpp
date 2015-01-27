@@ -445,6 +445,10 @@ int MySoftwareSerial::available()
 
 size_t MySoftwareSerial::write(uint8_t b)
 {
+
+
+  int paritycounter = 0;
+
   if (_tx_delay == 0) {
     setWriteError();
     return 0;
@@ -462,13 +466,23 @@ size_t MySoftwareSerial::write(uint8_t b)
   {
     for (byte mask = 0x01; mask; mask <<= 1)
     {
-      if (b & mask) // choose bit
+      if (b & mask){ // choose bit
         tx_pin_write(LOW); // send 1
+        paritycounter++; // even parity
+      }
       else
         tx_pin_write(HIGH); // send 0
     
       tunedDelay(_tx_delay);
     }
+
+    // Write parity
+    if(paritycounter%2==0)
+      tx_pin_write(HIGH); // Even parity
+    else
+      tx_pin_write(LOW);
+
+    tunedDelay(_tx_delay);
 
     tx_pin_write(LOW); // restore pin to natural state
   }
@@ -476,16 +490,32 @@ size_t MySoftwareSerial::write(uint8_t b)
   {
     for (byte mask = 0x01; mask; mask <<= 1)
     {
-      if (b & mask) // choose bit
+      if (b & mask){ // choose bit
         tx_pin_write(HIGH); // send 1
+        paritycounter++;
+      }
       else
         tx_pin_write(LOW); // send 0
     
       tunedDelay(_tx_delay);
     }
 
+    // Write parity
+    if(paritycounter%2==0)
+      tx_pin_write(LOW); // Even parity
+    else
+      tx_pin_write(HIGH);
+
+    tunedDelay(_tx_delay);
+
+
+
     tx_pin_write(HIGH); // restore pin to natural state
   }
+
+
+
+
 
   SREG = oldSREG; // turn interrupts back on
   tunedDelay(_tx_delay);
